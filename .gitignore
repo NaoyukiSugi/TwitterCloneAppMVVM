@@ -89,3 +89,4 @@ lint/tmp/
 
 # Others
 .DS_Store
+gradle.properties
