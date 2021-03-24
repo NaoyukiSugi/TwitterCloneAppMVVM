@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitterminiapp.data.util.Resource
 import com.example.twitterminiapp.databinding.ActivityMainBinding
 import com.example.twitterminiapp.presentation.adapter.TwitterAdapter
@@ -18,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     @Inject
-    lateinit var adapter: TwitterAdapter
+    lateinit var twitterAdapter: TwitterAdapter
 
     @Inject
     lateinit var viewModelFactory: TwitterViewModelFactory
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this, viewModelFactory).get(TwitterViewModel::class.java)
+        initRecyclerView()
         viewTimeline()
     }
 
@@ -39,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             when (resource) {
                 is Resource.Success -> {
                     resource.data?.let {
-                        adapter.differ.submitList(it)
+                        twitterAdapter.differ.submitList(it)
                     }
                 }
                 is Resource.Error -> {
@@ -59,6 +61,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        binding.tw
+        binding.homeTimelineRecyclerView.apply {
+            adapter = twitterAdapter
+            layoutManager = LinearLayoutManager(this@MainActivity)
+        }
     }
 }
