@@ -10,7 +10,7 @@ import com.example.twitterminiapp.databinding.ViewTweetBinding
 
 class TwitterAdapter : RecyclerView.Adapter<TwitterViewHolder>() {
 
-    private val differ = AsyncListDiffer(this, DIFF_CALLBACK)
+    val differ = AsyncListDiffer(this, DIFF_CALLBACK)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TwitterViewHolder {
         val binding = ViewTweetBinding.inflate(LayoutInflater.from(parent.context), parent, false)
