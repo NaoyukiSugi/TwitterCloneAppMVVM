@@ -14,7 +14,7 @@ class TwitterViewHolder(
 
     fun bind(tweet: Tweet) {
         binding.apply {
-            requestManager.load(tweet.user.profileImageUrl).into(userIcon)
+            requestManager.load(tweet.user.profileImageUrlHttps).into(userIcon)
             userName.text = tweet.user.name
             userScreenName.text = tweet.user.screenName
             description.text = tweet.text
