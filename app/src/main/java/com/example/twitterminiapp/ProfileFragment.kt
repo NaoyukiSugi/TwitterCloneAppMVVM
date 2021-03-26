@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.example.twitterminiapp.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
@@ -23,6 +24,12 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args: ProfileFragmentArgs by navArgs()
-        viewBinding.textView.text = args.selectedUserIcon.toString()
+        val user = args.selectedUserIcon
+        viewBinding.apply {
+            Glide.with(viewBinding.root).load(user.profileImageUrlHttps).into(userIcon)
+            userName.text = user.name
+            userScreenName.text = user.screenName
+            userDescription.text = user.description
+        }
     }
 }
