@@ -18,5 +18,9 @@
         android:id="@+id/profileFragment"
         android:name="com.example.twitterminiapp.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <argument
+            android:name="selected_tweet"
+            app:argType="com.example.twitterminiapp.data.model.Tweet" />
+    </fragment>
 </navigation>

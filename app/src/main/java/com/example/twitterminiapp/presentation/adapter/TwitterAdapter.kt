@@ -10,11 +10,13 @@ import com.example.twitterminiapp.databinding.ViewTweetBinding
 
 class TwitterAdapter : RecyclerView.Adapter<TwitterViewHolder>() {
 
+    private var onTweetClickListener: ((Tweet) -> Unit)? = null
+
     val differ = AsyncListDiffer(this, DIFF_CALLBACK)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TwitterViewHolder {
         val binding = ViewTweetBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TwitterViewHolder(binding)
+        return TwitterViewHolder(binding = binding, onTweetClickListener = onTweetClickListener)
     }
 
     override fun onBindViewHolder(holder: TwitterViewHolder, position: Int) {
@@ -24,6 +26,10 @@ class TwitterAdapter : RecyclerView.Adapter<TwitterViewHolder>() {
 
     override fun getItemCount(): Int {
         return differ.currentList.size
+    }
+
+    fun setOnTweetClickListener(listener: (Tweet) -> Unit) {
+        onTweetClickListener = listener
     }
 
     companion object {
