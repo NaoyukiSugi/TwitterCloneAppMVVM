@@ -20,7 +20,7 @@
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile">
         <argument
-            android:name="selected_tweet"
-            app:argType="com.example.twitterminiapp.data.model.Tweet" />
+            android:name="selected_user_icon"
+            app:argType="com.example.twitterminiapp.data.model.User" />
     </fragment>
 </navigation>
