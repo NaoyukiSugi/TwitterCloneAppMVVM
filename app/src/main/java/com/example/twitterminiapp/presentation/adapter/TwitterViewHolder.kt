@@ -9,7 +9,7 @@ import com.example.twitterminiapp.databinding.ViewTweetBinding
 class TwitterViewHolder(
     private val binding: ViewTweetBinding,
     private val requestManager: RequestManager = Glide.with(binding.root),
-    private val onTweetClickListener: ((Tweet) -> Unit)?
+    private val onUserIconClickListener: ((Tweet) -> Unit)?
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
@@ -19,8 +19,8 @@ class TwitterViewHolder(
             userName.text = tweet.user.name
             userScreenName.text = tweet.user.screenName
             description.text = tweet.text
-            root.setOnClickListener {
-                onTweetClickListener?.let { it(tweet) }
+            userIcon.setOnClickListener {
+                onUserIconClickListener?.let { it(tweet) }
             }
         }
     }

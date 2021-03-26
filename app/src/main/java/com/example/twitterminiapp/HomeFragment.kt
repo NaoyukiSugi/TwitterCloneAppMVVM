@@ -32,9 +32,9 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
         twitterAdapter = (activity as MainActivity).twitterAdapter
-        twitterAdapter.setOnTweetClickListener {
+        twitterAdapter.setOnUserIconClickListener {
             val bundle = Bundle().apply {
-                putSerializable("selected_tweet", it)
+                putSerializable("selected_user_icon", it.user)
             }
             findNavController().navigate(R.id.action_homeFragment_to_profileFragment, bundle)
         }
