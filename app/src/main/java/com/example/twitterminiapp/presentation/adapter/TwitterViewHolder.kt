@@ -18,7 +18,7 @@ class TwitterViewHolder(
             requestManager.load(tweet.user.profileImageUrlHttps).into(userIcon)
             userName.text = tweet.user.name
             userScreenName.text = tweet.user.screenName
-            description.text = tweet.text
+            userDescription.text = tweet.text
             userIcon.setOnClickListener {
                 onUserIconClickListener?.let { it(tweet) }
             }

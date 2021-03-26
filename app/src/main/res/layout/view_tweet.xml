@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/tweet_icon_margin"
         android:gravity="center_horizontal"
-        android:textColor="@color/tweet_name"
+        android:textColor="@color/tweet_user_name"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/user_icon"
         app:layout_constraintTop_toTopOf="parent"
@@ -34,13 +34,13 @@
         android:id="@+id/user_screen_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/tweet_screen_name"
+        android:textColor="@color/tweet_user_screen_name"
         app:layout_constraintStart_toEndOf="@id/user_name"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="\@hikakin" />
 
     <TextView
-        android:id="@+id/description"
+        android:id="@+id/user_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="@color/tweet_description"
