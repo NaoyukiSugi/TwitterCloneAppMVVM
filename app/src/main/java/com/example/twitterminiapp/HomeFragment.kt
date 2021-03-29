@@ -20,9 +20,9 @@ class HomeFragment : Fragment() {
     private lateinit var twitterAdapter: TwitterAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         viewBinding = FragmentHomeBinding.inflate(inflater, container, false)
         return viewBinding.root
@@ -54,9 +54,9 @@ class HomeFragment : Fragment() {
                 is Resource.Error -> {
                     resource.message?.let {
                         Toast.makeText(
-                            activity,
-                            "An error occured: $it",
-                            Toast.LENGTH_LONG
+                                activity,
+                                "An error occured: $it",
+                                Toast.LENGTH_LONG
                         ).show()
                     }
                 }
