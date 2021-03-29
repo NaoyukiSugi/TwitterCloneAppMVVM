@@ -1,4 +1,4 @@
-package com.example.twitterminiapp
+package com.example.twitterminiapp.presentation.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.twitterminiapp.R
 import com.example.twitterminiapp.data.util.Resource
 import com.example.twitterminiapp.databinding.FragmentHomeBinding
+import com.example.twitterminiapp.presentation.activity.MainActivity
 import com.example.twitterminiapp.presentation.adapter.TwitterAdapter
 import com.example.twitterminiapp.presentation.viewmodel.TwitterViewModel
 

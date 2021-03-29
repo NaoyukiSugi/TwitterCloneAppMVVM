@@ -1,4 +1,4 @@
-package com.example.twitterminiapp.presentation.di
+package com.example.twitterminiapp.presentation.di.modules
 
 import com.example.twitterminiapp.presentation.adapter.TwitterAdapter
 import dagger.Module
