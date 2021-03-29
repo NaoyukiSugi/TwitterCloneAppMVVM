@@ -2,7 +2,9 @@ package com.example.twitterminiapp.presentation.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.example.twitterminiapp.R
 import com.example.twitterminiapp.databinding.ActivityMainBinding
 import com.example.twitterminiapp.presentation.adapter.TwitterAdapter
 import com.example.twitterminiapp.presentation.viewmodel.TwitterViewModel
@@ -26,7 +28,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory).get(TwitterViewModel::class.java)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
     }
 }
