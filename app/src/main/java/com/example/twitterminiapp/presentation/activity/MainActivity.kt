@@ -1,4 +1,4 @@
-package com.example.twitterminiapp
+package com.example.twitterminiapp.presentation.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

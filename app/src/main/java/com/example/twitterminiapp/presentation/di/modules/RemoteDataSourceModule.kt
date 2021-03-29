@@ -1,4 +1,4 @@
-package com.example.twitterminiapp.presentation.di
+package com.example.twitterminiapp.presentation.di.modules
 
 import com.example.twitterminiapp.data.api.TwitterAPIService
 import com.example.twitterminiapp.data.repository.dataSource.TwitterRemoteDataSource

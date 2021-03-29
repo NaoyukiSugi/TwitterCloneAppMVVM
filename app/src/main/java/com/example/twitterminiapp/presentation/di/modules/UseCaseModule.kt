@@ -1,4 +1,4 @@
-package com.example.twitterminiapp.presentation.di
+package com.example.twitterminiapp.presentation.di.modules
 
 import com.example.twitterminiapp.domain.repository.TwitterRepository
 import com.example.twitterminiapp.domain.usecase.GetTimelineUseCase
