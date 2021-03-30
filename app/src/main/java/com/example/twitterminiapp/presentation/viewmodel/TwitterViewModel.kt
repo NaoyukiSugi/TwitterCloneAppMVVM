@@ -8,6 +8,7 @@ import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.twitterminiapp.data.model.Tweet
 import com.example.twitterminiapp.data.util.Resource
 import com.example.twitterminiapp.domain.usecase.GetTimelineUseCase
@@ -34,10 +35,6 @@ class TwitterViewModel(
         } catch (e: Exception) {
             tweets.postValue(Resource.Error(e.message.toString()))
         }
-    }
-
-    fun refresh() {
-        getTimeline()
     }
 
     private fun isNetworkAvailable(context: Context?): Boolean {

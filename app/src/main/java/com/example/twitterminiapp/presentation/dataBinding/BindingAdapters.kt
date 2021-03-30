@@ -6,14 +6,15 @@ import com.example.twitterminiapp.presentation.viewmodel.TwitterViewModel
 
 object BindingAdapters {
 
-    @BindingAdapter("android:onRefresh")
+    @BindingAdapter("onRefreshListener")
     @JvmStatic
-    fun setSwipeRefreshLayoutOnRefreshListener(
-        view: SwipeRefreshLayout,
+    fun setOnRefreshListener(
+        swipeRefreshLayout: SwipeRefreshLayout,
         viewModel: TwitterViewModel
     ) {
-        view.setOnRefreshListener {
-            viewModel.refresh()
+        swipeRefreshLayout.setOnRefreshListener {
+            viewModel.getTimeline()
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 }

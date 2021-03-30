@@ -26,7 +26,10 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        binding.viewModel = (activity as MainActivity).viewModel
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = (activity as MainActivity).viewModel
+        }
         return binding.root
     }
 
@@ -39,7 +42,10 @@ class HomeFragment : Fragment() {
             }
             findNavController().navigate(R.id.action_homeFragment_to_profileFragment, bundle)
         }
-        initRecyclerView()
+        binding.homeTimelineRecyclerView.apply {
+            adapter = twitterAdapter
+            layoutManager = LinearLayoutManager(activity)
+        }
         viewTimeline()
     }
 
@@ -66,12 +72,5 @@ class HomeFragment : Fragment() {
                 }
             }
         })
-    }
-
-    private fun initRecyclerView() {
-        binding.homeTimelineRecyclerView.apply {
-            adapter = twitterAdapter
-            layoutManager = LinearLayoutManager(activity)
-        }
     }
 }

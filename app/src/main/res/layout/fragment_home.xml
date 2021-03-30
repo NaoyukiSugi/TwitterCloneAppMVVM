@@ -8,6 +8,10 @@
         <variable
             name="viewModel"
             type="com.example.twitterminiapp.presentation.viewmodel.TwitterViewModel" />
+
+        <variable
+            name="adapter"
+            type="com.example.twitterminiapp.presentation.adapter.TwitterAdapter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,9 +21,9 @@
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
+            onRefreshListener="@{viewModel}"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:onRefresh="@{viewModel}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
