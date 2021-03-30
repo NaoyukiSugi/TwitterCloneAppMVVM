@@ -36,6 +36,10 @@ class TwitterViewModel(
         }
     }
 
+    fun refresh() {
+        getTimeline()
+    }
+
     private fun isNetworkAvailable(context: Context?): Boolean {
         if (context == null) return false
         val connectivityManager =

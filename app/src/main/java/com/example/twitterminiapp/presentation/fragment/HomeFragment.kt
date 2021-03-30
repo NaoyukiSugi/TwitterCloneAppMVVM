@@ -14,12 +14,10 @@ import com.example.twitterminiapp.data.util.Resource
 import com.example.twitterminiapp.databinding.FragmentHomeBinding
 import com.example.twitterminiapp.presentation.activity.MainActivity
 import com.example.twitterminiapp.presentation.adapter.TwitterAdapter
-import com.example.twitterminiapp.presentation.viewmodel.TwitterViewModel
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var viewModel: TwitterViewModel
     private lateinit var twitterAdapter: TwitterAdapter
 
     override fun onCreateView(
@@ -28,12 +26,12 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        binding.viewModel = (activity as MainActivity).viewModel
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = (activity as MainActivity).viewModel
         twitterAdapter = (activity as MainActivity).twitterAdapter
         twitterAdapter.setOnUserIconClickListener {
             val bundle = Bundle().apply {
@@ -46,8 +44,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun viewTimeline() {
-        viewModel.getTimeline()
-        viewModel.tweets.observe(viewLifecycleOwner, { resource ->
+        binding.viewModel!!.getTimeline()
+        binding.viewModel!!.tweets.observe(viewLifecycleOwner, { resource ->
             when (resource) {
                 is Resource.Success -> {
                     resource.data?.let {
