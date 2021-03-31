@@ -23,4 +23,9 @@
             android:name="selected_user_icon"
             app:argType="com.example.twitterminiapp.data.model.User" />
     </fragment>
+    <fragment
+        android:id="@+id/searchResultFragment"
+        android:name="com.example.twitterminiapp.SearchResultFragment"
+        android:label="fragment_search_result"
+        tools:layout="@layout/fragment_search_result" />
 </navigation>
