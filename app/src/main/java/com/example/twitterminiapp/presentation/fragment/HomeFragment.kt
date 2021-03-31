@@ -72,5 +72,28 @@ class HomeFragment : Fragment() {
                 }
             }
         })
+
+        binding.viewModel!!.searchedTweets.observe(viewLifecycleOwner, { resource ->
+            when (resource) {
+                is Resource.Success -> {
+                    resource.data?.let {
+                        twitterAdapter.differ.submitList(it)
+                    }
+                }
+                is Resource.Error -> {
+                    resource.message?.let {
+                        Toast.makeText(
+                            activity,
+                            "An error occured: $it",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+                is Resource.Loading -> {
+                    // TODO Progress barを表示
+                }
+            }
+        })
+
     }
 }
