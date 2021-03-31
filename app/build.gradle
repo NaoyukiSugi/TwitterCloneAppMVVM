@@ -20,11 +20,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "CONSUMER_KEY", consumerKey)
-        buildConfigField("String", "CONSUMER_SECRET", consumerSecret)
-        buildConfigField("String", "ACCESS_TOKEN", accessToken)
-        buildConfigField("String", "ACCESS_TOKEN_SECRET", accessTokenSecret)
         buildConfigField("String", "OAUTH_HEADER_STRING", oauth)
+        buildConfigField("String", "BEARER_TOKEN", bearerToken)
     }
 
     buildTypes {

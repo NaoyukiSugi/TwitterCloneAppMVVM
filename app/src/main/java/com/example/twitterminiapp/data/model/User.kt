@@ -10,8 +10,8 @@ data class User(
     val name: String,
     @SerializedName("screen_name")
     val screenName: String,
-    @SerializedName("description")
+    @SerializedName(value = "description", alternate = ["username"])
     val description: String,
-    @SerializedName("profile_image_url_https")
+    @SerializedName(value = "profile_image_url_https", alternate = ["profile_image_url"])
     val profileImageUrlHttps: String,
 ) : Serializable

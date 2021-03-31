@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.twitterminiapp.data.model.Tweet
+import com.example.twitterminiapp.data.model.GetSearchedTweetsResponse
 import com.example.twitterminiapp.data.util.Resource
 import com.example.twitterminiapp.domain.usecase.GetSearchedTimelineUseCase
 import com.example.twitterminiapp.domain.usecase.GetTimelineUseCase
@@ -17,13 +18,13 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class TwitterViewModel(
-    private val app: Application,
-    private val getTimelineUseCase: GetTimelineUseCase,
-    private val getSearchedTimelineUseCase: GetSearchedTimelineUseCase
+        private val app: Application,
+        private val getTimelineUseCase: GetTimelineUseCase,
+        private val getSearchedTimelineUseCase: GetSearchedTimelineUseCase
 ) : AndroidViewModel(app) {
 
     val tweets: MutableLiveData<Resource<List<Tweet>>> = MutableLiveData()
-    val searchedTweets: MutableLiveData<Resource<List<Tweet>>> = MutableLiveData()
+    val searchedGetSearchedTweetsNew: MutableLiveData<Resource<List<Tweet>>> = MutableLiveData()
 
     fun getTimeline() = viewModelScope.launch(Dispatchers.IO) {
         tweets.postValue(Resource.Loading())
@@ -40,28 +41,38 @@ class TwitterViewModel(
     }
 
     fun getSearchedTimeline(
-        searchQuery: String
+            searchQuery: String
     ) = viewModelScope.launch(Dispatchers.IO) {
-        searchedTweets.postValue(Resource.Loading())
+        searchedGetSearchedTweetsNew.postValue(Resource.Loading())
         try {
             if (isNetworkAvailable(app)) {
                 val apiResult = getSearchedTimelineUseCase.execute(searchQuery)
-                searchedTweets.postValue(apiResult)
+                searchedGetSearchedTweetsNew.postValue(convertToTweets(apiResult))
             } else {
-                searchedTweets.postValue(Resource.Error("Internet is not available"))
+                searchedGetSearchedTweetsNew.postValue(Resource.Error("Internet is not available"))
             }
         } catch (e: Exception) {
-            searchedTweets.postValue(Resource.Error(e.message.toString()))
+            searchedGetSearchedTweetsNew.postValue(Resource.Error(e.message.toString()))
         }
+    }
+
+    private fun convertToTweets(resource: Resource<GetSearchedTweetsResponse>): Resource<List<Tweet>> {
+        val tweets = resource.data.let { response ->
+            val userIdMap = response!!.includes.users.associate { it.id to it }
+            response.tweets.map {
+                Tweet(id = it.id, createdAt = it.createdAt, text = it.text, user = userIdMap[it.authorId]!!)
+            }
+        }
+        return Resource.Success(tweets)
     }
 
     private fun isNetworkAvailable(context: Context?): Boolean {
         if (context == null) return false
         val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val capabilities =
-                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                    connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
             if (capabilities != null) {
                 when {
                     capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {

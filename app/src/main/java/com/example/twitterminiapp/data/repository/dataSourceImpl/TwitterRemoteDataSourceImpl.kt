@@ -1,19 +1,22 @@
 package com.example.twitterminiapp.data.repository.dataSourceImpl
 
-import com.example.twitterminiapp.data.api.TwitterAPIService
+import com.example.twitterminiapp.data.api.TwitterNewAPIService
+import com.example.twitterminiapp.data.api.TwitterOldAPIService
 import com.example.twitterminiapp.data.model.Tweet
+import com.example.twitterminiapp.data.model.GetSearchedTweetsResponse
 import com.example.twitterminiapp.data.repository.dataSource.TwitterRemoteDataSource
 import retrofit2.Response
 
 class TwitterRemoteDataSourceImpl(
-    private val apiService: TwitterAPIService
+    private val oldApiService: TwitterOldAPIService,
+    private val newApiService: TwitterNewAPIService
 ) : TwitterRemoteDataSource {
 
     override suspend fun getTimeline(): Response<List<Tweet>> {
-        return apiService.getTimeline()
+        return oldApiService.getTimeline()
     }
 
-    override suspend fun getSearchedTimeline(searchQuery: String): Response<List<Tweet>> {
-        return apiService.getSearchedTimeline(searchQuery)
+    override suspend fun getSearchedTimeline(searchQuery: String): Response<GetSearchedTweetsResponse> {
+        return newApiService.getSearchedTimeline(searchQuery)
     }
 }
