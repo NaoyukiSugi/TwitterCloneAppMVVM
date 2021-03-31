@@ -12,4 +12,8 @@ class TwitterRemoteDataSourceImpl(
     override suspend fun getTimeline(): Response<List<Tweet>> {
         return apiService.getTimeline()
     }
+
+    override suspend fun getSearchedTimeline(searchQuery: String): Response<List<Tweet>> {
+        return apiService.getSearchedTimeline(searchQuery)
+    }
 }

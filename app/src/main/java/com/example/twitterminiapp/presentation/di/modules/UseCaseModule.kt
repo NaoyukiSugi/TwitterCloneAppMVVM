@@ -1,6 +1,7 @@
 package com.example.twitterminiapp.presentation.di.modules
 
 import com.example.twitterminiapp.domain.repository.TwitterRepository
+import com.example.twitterminiapp.domain.usecase.GetSearchedTimelineUseCase
 import com.example.twitterminiapp.domain.usecase.GetTimelineUseCase
 import dagger.Module
 import dagger.Provides
@@ -16,4 +17,10 @@ class UseCaseModule {
     @Provides
     fun provideGetTimelineUseCase(twitterRepository: TwitterRepository): GetTimelineUseCase =
         GetTimelineUseCase(twitterRepository)
+
+    @Singleton
+    @Provides
+    fun provideSearchedTimelineUseCase(twitterRepository: TwitterRepository): GetSearchedTimelineUseCase =
+        GetSearchedTimelineUseCase(twitterRepository)
+
 }
