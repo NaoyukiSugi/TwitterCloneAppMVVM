@@ -12,19 +12,19 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.test.assertEquals
 
-class TwitterAPIServiceTest {
+class TwitterNewAPIServiceTest {
 
-    private lateinit var service: TwitterAPIService
+    private lateinit var serviceNew: TwitterNewAPIService
     private lateinit var server: MockWebServer
 
     @BeforeEach
     fun setUp() {
         server = MockWebServer()
-        service = Retrofit.Builder()
+        serviceNew = Retrofit.Builder()
             .baseUrl(server.url(""))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(TwitterAPIService::class.java)
+            .create(TwitterNewAPIService::class.java)
     }
 
     @AfterEach
@@ -36,7 +36,7 @@ class TwitterAPIServiceTest {
     fun `getTimeline should receive expected contents`() {
         runBlocking {
             enqueueMockResponse("timeline_response.json")
-            val responseBody = service.getTimeline().body()
+            val responseBody = serviceNew.getTimeline().body()
             val topTweet = responseBody!![0]
             assertEquals(1374278834393026561, topTweet.id)
             assertEquals("Tue Mar 23 08:36:21 +0000 2021", topTweet.createdAt)

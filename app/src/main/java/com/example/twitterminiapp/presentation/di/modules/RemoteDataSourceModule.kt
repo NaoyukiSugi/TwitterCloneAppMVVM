@@ -1,6 +1,7 @@
 package com.example.twitterminiapp.presentation.di.modules
 
-import com.example.twitterminiapp.data.api.TwitterAPIService
+import com.example.twitterminiapp.data.api.TwitterNewAPIService
+import com.example.twitterminiapp.data.api.TwitterOldAPIService
 import com.example.twitterminiapp.data.repository.dataSource.TwitterRemoteDataSource
 import com.example.twitterminiapp.data.repository.dataSourceImpl.TwitterRemoteDataSourceImpl
 import dagger.Module
@@ -15,6 +16,9 @@ class RemoteDataSourceModule {
 
     @Singleton
     @Provides
-    fun provideTwitterRemoteDataSource(apiService: TwitterAPIService): TwitterRemoteDataSource =
-        TwitterRemoteDataSourceImpl(apiService)
+    fun provideTwitterRemoteDataSource(
+        oldApiService: TwitterOldAPIService,
+        newApiService: TwitterNewAPIService
+    ): TwitterRemoteDataSource =
+        TwitterRemoteDataSourceImpl(oldApiService, newApiService)
 }

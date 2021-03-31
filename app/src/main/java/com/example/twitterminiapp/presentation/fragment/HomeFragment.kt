@@ -73,7 +73,7 @@ class HomeFragment : Fragment() {
             }
         })
 
-        binding.viewModel!!.searchedTweets.observe(viewLifecycleOwner, { resource ->
+        binding.viewModel!!.searchedGetSearchedTweetsNew.observe(viewLifecycleOwner, { resource ->
             when (resource) {
                 is Resource.Success -> {
                     resource.data?.let {
