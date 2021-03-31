@@ -5,4 +5,5 @@ import com.example.twitterminiapp.data.util.Resource
 
 interface TwitterRepository {
     suspend fun getTimeline(): Resource<List<Tweet>>
+    suspend fun getSearchedTimeline(searchQuery: String): Resource<List<Tweet>>
 }

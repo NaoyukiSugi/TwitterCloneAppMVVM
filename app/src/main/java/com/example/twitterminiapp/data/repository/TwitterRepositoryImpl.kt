@@ -14,6 +14,10 @@ class TwitterRepositoryImpl(
         return responseToResource(remoteDataSource.getTimeline())
     }
 
+    override suspend fun getSearchedTimeline(searchQuery: String): Resource<List<Tweet>> {
+        return responseToResource(remoteDataSource.getSearchedTimeline(searchQuery))
+    }
+
     private fun responseToResource(response: Response<List<Tweet>>): Resource<List<Tweet>> {
         if (response.isSuccessful) {
             response.body()?.let { result ->
