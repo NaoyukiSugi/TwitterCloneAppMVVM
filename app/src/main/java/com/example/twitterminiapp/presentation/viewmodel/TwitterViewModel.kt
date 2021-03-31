@@ -23,6 +23,7 @@ class TwitterViewModel(
 ) : AndroidViewModel(app) {
 
     val tweets: MutableLiveData<Resource<List<Tweet>>> = MutableLiveData()
+    val searchedTweets: MutableLiveData<Resource<List<Tweet>>> = MutableLiveData()
 
     fun getTimeline() = viewModelScope.launch(Dispatchers.IO) {
         tweets.postValue(Resource.Loading())
@@ -35,6 +36,22 @@ class TwitterViewModel(
             }
         } catch (e: Exception) {
             tweets.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
+    fun getSearchedTimeline(
+        searchQuery: String
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        searchedTweets.postValue(Resource.Loading())
+        try {
+            if (isNetworkAvailable(app)) {
+                val apiResult = getSearchedTimelineUseCase.execute(searchQuery)
+                searchedTweets.postValue(apiResult)
+            } else {
+                searchedTweets.postValue(Resource.Error("Internet is not available"))
+            }
+        } catch (e: Exception) {
+            searchedTweets.postValue(Resource.Error(e.message.toString()))
         }
     }
 
