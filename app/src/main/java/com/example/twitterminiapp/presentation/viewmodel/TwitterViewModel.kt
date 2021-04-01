@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.twitterminiapp.data.model.Tweet
 import com.example.twitterminiapp.data.model.GetSearchedTweetsResponse
 import com.example.twitterminiapp.data.util.Resource
-import com.example.twitterminiapp.domain.usecase.GetSearchedTimelineUseCase
+import com.example.twitterminiapp.domain.datasource.GetSearchedTweetsDataSourceFactory
 import com.example.twitterminiapp.domain.usecase.GetTimelineUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,11 +20,18 @@ import java.lang.Exception
 class TwitterViewModel(
         private val app: Application,
         private val getTimelineUseCase: GetTimelineUseCase,
-        private val getSearchedTimelineUseCase: GetSearchedTimelineUseCase
 ) : AndroidViewModel(app) {
+
+    init {
+
+    }
 
     val tweets: MutableLiveData<Resource<List<Tweet>>> = MutableLiveData()
     val searchedGetSearchedTweetsNew: MutableLiveData<Resource<List<Tweet>>> = MutableLiveData()
+
+    fun setUp(dataSourceFactory: GetSearchedTweetsDataSourceFactory) {
+
+    }
 
     fun getTimeline() = viewModelScope.launch(Dispatchers.IO) {
         tweets.postValue(Resource.Loading())
@@ -46,8 +53,10 @@ class TwitterViewModel(
         searchedGetSearchedTweetsNew.postValue(Resource.Loading())
         try {
             if (isNetworkAvailable(app)) {
-                val apiResult = getSearchedTimelineUseCase.execute(searchQuery)
-                searchedGetSearchedTweetsNew.postValue(convertToTweets(apiResult))
+                val apiResult =
+
+//                val apiResult = getSearchedTimelineUseCase.execute(searchQuery)
+//                searchedGetSearchedTweetsNew.postValue(convertToTweets(apiResult))
             } else {
                 searchedGetSearchedTweetsNew.postValue(Resource.Error("Internet is not available"))
             }

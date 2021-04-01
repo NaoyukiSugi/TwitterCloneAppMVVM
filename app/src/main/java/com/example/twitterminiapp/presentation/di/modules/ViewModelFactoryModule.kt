@@ -1,6 +1,7 @@
 package com.example.twitterminiapp.presentation.di.modules
 
 import android.app.Application
+import com.example.twitterminiapp.domain.datasource.GetSearchedTweetsDataSourceFactory
 import com.example.twitterminiapp.domain.usecase.GetSearchedTimelineUseCase
 import com.example.twitterminiapp.domain.usecase.GetTimelineUseCase
 import com.example.twitterminiapp.presentation.viewmodel.TwitterViewModelFactory
@@ -19,7 +20,13 @@ class ViewModelFactoryModule {
     fun provideTwitterViewModelFactory(
         app: Application,
         getTimelineUseCase: GetTimelineUseCase,
-        getSearchedTimelineUseCase: GetSearchedTimelineUseCase
+        getSearchedTimelineUseCase: GetSearchedTimelineUseCase,
+        getSearchedTweetsDataSourceFactory: GetSearchedTweetsDataSourceFactory
     ): TwitterViewModelFactory =
-        TwitterViewModelFactory(app, getTimelineUseCase, getSearchedTimelineUseCase)
+        TwitterViewModelFactory(
+            app,
+            getTimelineUseCase,
+            getSearchedTimelineUseCase,
+            getSearchedTweetsDataSourceFactory
+        )
 }

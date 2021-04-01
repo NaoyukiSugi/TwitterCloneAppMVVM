@@ -11,6 +11,7 @@ interface TwitterNewAPIService {
         @Query("query") searchQuery: String,
         @Query("expansions") expansions: String = "author_id",
         @Query("tweet.fields") tweetField: String = "created_at",
-        @Query("user.fields") userFields: String = "profile_image_url,description"
+        @Query("user.fields") userFields: String = "profile_image_url,description",
+        @Query("next_token") nextToken: String? = null
     ): Response<GetSearchedTweetsResponse>
 }

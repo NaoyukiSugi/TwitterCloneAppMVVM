@@ -16,7 +16,10 @@ class TwitterRemoteDataSourceImpl(
         return oldApiService.getTimeline()
     }
 
-    override suspend fun getSearchedTimeline(searchQuery: String): Response<GetSearchedTweetsResponse> {
-        return newApiService.getSearchedTimeline(searchQuery)
+    override suspend fun getSearchedTimeline(
+        searchQuery: String,
+        nextToken: String?
+    ): Response<GetSearchedTweetsResponse> {
+        return newApiService.getSearchedTimeline(searchQuery, nextToken = nextToken)
     }
 }

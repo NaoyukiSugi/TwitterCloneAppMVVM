@@ -15,8 +15,11 @@ class TwitterRepositoryImpl(
         return responseToResourceForOldApi(remoteDataSource.getTimeline())
     }
 
-    override suspend fun getSearchedTimeline(searchQuery: String): Resource<GetSearchedTweetsResponse> {
-        return responseToResourceForNewApi(remoteDataSource.getSearchedTimeline(searchQuery))
+    override suspend fun getSearchedTimeline(
+        searchQuery: String,
+        nextToken: String?
+    ): Resource<GetSearchedTweetsResponse> {
+        return responseToResourceForNewApi(remoteDataSource.getSearchedTimeline(searchQuery, nextToken))
     }
 
     private fun responseToResourceForOldApi(response: Response<List<Tweet>>): Resource<List<Tweet>> {
