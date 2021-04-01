@@ -3,7 +3,6 @@ package com.example.twitterminiapp.presentation.viewmodel
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.twitterminiapp.domain.datasource.GetSearchedTweetsDataSourceFactory
 import com.example.twitterminiapp.domain.usecase.GetSearchedTimelineUseCase
 import com.example.twitterminiapp.domain.usecase.GetTimelineUseCase
 

@@ -19,14 +19,6 @@ class ViewModelFactoryModule {
     @Provides
     fun provideTwitterViewModelFactory(
         app: Application,
-        getTimelineUseCase: GetTimelineUseCase,
-        getSearchedTimelineUseCase: GetSearchedTimelineUseCase,
-        getSearchedTweetsDataSourceFactory: GetSearchedTweetsDataSourceFactory
-    ): TwitterViewModelFactory =
-        TwitterViewModelFactory(
-            app,
-            getTimelineUseCase,
-            getSearchedTimelineUseCase,
-            getSearchedTweetsDataSourceFactory
-        )
+        getTimelineUseCase: GetTimelineUseCase
+    ): TwitterViewModelFactory = TwitterViewModelFactory(app, getTimelineUseCase)
 }

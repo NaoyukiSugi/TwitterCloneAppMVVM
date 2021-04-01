@@ -7,18 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitterminiapp.R
-import com.example.twitterminiapp.data.util.Resource
+import com.example.twitterminiapp.data.util.Result
 import com.example.twitterminiapp.databinding.FragmentHomeBinding
+import com.example.twitterminiapp.domain.datasource.GetSearchedTweetsDataSourceFactory
+import com.example.twitterminiapp.domain.datasource.SearchedTweetsDataLoadingResult
 import com.example.twitterminiapp.presentation.activity.MainActivity
 import com.example.twitterminiapp.presentation.adapter.TwitterAdapter
+import com.example.twitterminiapp.presentation.viewmodel.TwitterViewModel
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var twitterAdapter: TwitterAdapter
+    private lateinit var twitterViewModel: TwitterViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,15 +31,19 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = (activity as MainActivity).viewModel
-        }
+        twitterViewModel = (activity as MainActivity).viewModel
+        initAdapter()
+        initBinding()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViewModel()
+        twitterViewModel.getHomeTimeline()
+    }
+
+    private fun initAdapter() {
         twitterAdapter = (activity as MainActivity).twitterAdapter
         twitterAdapter.setOnUserIconClickListener {
             val bundle = Bundle().apply {
@@ -42,58 +51,59 @@ class HomeFragment : Fragment() {
             }
             findNavController().navigate(R.id.action_homeFragment_to_profileFragment, bundle)
         }
-        binding.homeTimelineRecyclerView.apply {
-            adapter = twitterAdapter
-            layoutManager = LinearLayoutManager(activity)
-        }
-        viewTimeline()
     }
 
-    private fun viewTimeline() {
-        binding.viewModel!!.getTimeline()
-        binding.viewModel!!.tweets.observe(viewLifecycleOwner, { resource ->
-            when (resource) {
-                is Resource.Success -> {
-                    resource.data?.let {
-                        twitterAdapter.differ.submitList(it)
-                    }
-                }
-                is Resource.Error -> {
-                    resource.message?.let {
-                        Toast.makeText(
-                            activity,
-                            "An error occured: $it",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-                is Resource.Loading -> {
-                    // TODO Progress barを表示
-                }
-            }
-        })
+    private fun initBinding() {
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = twitterViewModel
+            homeTimelineRecyclerView.adapter = twitterAdapter
+            homeTimelineRecyclerView.layoutManager = LinearLayoutManager(activity)
+        }
+    }
 
-        binding.viewModel!!.searchedGetSearchedTweetsNew.observe(viewLifecycleOwner, { resource ->
-            when (resource) {
-                is Resource.Success -> {
-                    resource.data?.let {
-                        twitterAdapter.differ.submitList(it)
-                    }
-                }
-                is Resource.Error -> {
-                    resource.message?.let {
-                        Toast.makeText(
-                            activity,
-                            "An error occured: $it",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-                is Resource.Loading -> {
-                    // TODO Progress barを表示
-                }
-            }
-        })
+    private fun initViewModel() {
 
+        twitterViewModel.apply {
+            setUp(
+                GetSearchedTweetsDataSourceFactory(
+                    getSearchedTimelineUseCase = (activity as MainActivity).getSearchedTimelineUseCase,
+                    repository = (activity as MainActivity).repository,
+                    searchQuery = twitterViewModel.searchQuery
+                )
+            )
+
+            setHomeTimelineTweetsObserver(viewLifecycleOwner, Observer { result ->
+                when (result) {
+                    is Result.Success -> {
+                        twitterAdapter.differ.submitList(result.data)
+                    }
+                    is Result.Error -> {
+                        Toast.makeText(activity, result.message, Toast.LENGTH_LONG).show()
+                    }
+                    is Result.Loading -> {
+                        // TODO()
+                    }
+                }
+            })
+
+            setSearchedTweetsObserver(viewLifecycleOwner, Observer {
+                twitterAdapter.differ.submitList(it)
+            })
+
+            setSearchedDataLoadingResultObserver(viewLifecycleOwner, Observer { result ->
+                when (result) {
+                    SearchedTweetsDataLoadingResult.Found -> {
+
+                    }
+                    is SearchedTweetsDataLoadingResult.Failed -> {
+                        Toast.makeText(activity, result.error.message, Toast.LENGTH_LONG).show()
+                    }
+                    SearchedTweetsDataLoadingResult.NotFound -> {
+                        // TODO()
+                    }
+                }
+            })
+        }
     }
 }

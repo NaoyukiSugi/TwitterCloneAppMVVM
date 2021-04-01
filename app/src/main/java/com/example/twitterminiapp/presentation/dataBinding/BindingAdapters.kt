@@ -4,9 +4,6 @@ import android.widget.SearchView
 import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.twitterminiapp.presentation.viewmodel.TwitterViewModel
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 object BindingAdapters {
 
@@ -17,7 +14,7 @@ object BindingAdapters {
         viewModel: TwitterViewModel
     ) {
         swipeRefreshLayout.setOnRefreshListener {
-            viewModel.getTimeline()
+            viewModel.getHomeTimeline()
             swipeRefreshLayout.isRefreshing = false
         }
     }
@@ -30,7 +27,12 @@ object BindingAdapters {
     ) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.getSearchedTimeline(query.toString())
+                if (query != null) {
+                    viewModel.searchQuery = query
+                } else {
+                    viewModel.searchQuery = ""
+                }
+                viewModel.invalidata()
                 return false
             }
 

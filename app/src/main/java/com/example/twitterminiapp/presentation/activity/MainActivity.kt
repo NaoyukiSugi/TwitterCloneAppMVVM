@@ -6,6 +6,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.twitterminiapp.R
 import com.example.twitterminiapp.databinding.ActivityMainBinding
+import com.example.twitterminiapp.domain.repository.TwitterRepository
+import com.example.twitterminiapp.domain.usecase.GetSearchedTimelineUseCase
 import com.example.twitterminiapp.presentation.adapter.TwitterAdapter
 import com.example.twitterminiapp.presentation.viewmodel.TwitterViewModel
 import com.example.twitterminiapp.presentation.viewmodel.TwitterViewModelFactory
@@ -22,6 +24,12 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: TwitterViewModelFactory
+
+    @Inject
+    lateinit var getSearchedTimelineUseCase: GetSearchedTimelineUseCase
+
+    @Inject
+    lateinit var repository: TwitterRepository
 
     lateinit var viewModel: TwitterViewModel
 
