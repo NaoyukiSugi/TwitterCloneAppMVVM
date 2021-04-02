@@ -7,7 +7,6 @@ import com.example.twitterminiapp.domain.repository.TwitterRepository
 import com.example.twitterminiapp.domain.usecase.GetSearchedTimelineUseCase
 
 class GetSearchedTweetsDataSourceFactory(
-    private val getSearchedTimelineUseCase: GetSearchedTimelineUseCase,
     private val searchedDataLoadingResultLiveData: MutableLiveData<SearchedTweetsDataLoadingResult> = MutableLiveData(),
     private val repository: TwitterRepository,
     private val searchQuery: String
@@ -15,7 +14,6 @@ class GetSearchedTweetsDataSourceFactory(
 
     override fun create(): DataSource<String, Tweet> =
         GetSearchedTweetsDataSource(
-            getSearchedTimelineUseCase = getSearchedTimelineUseCase,
             searchedDataLoadingResultLiveData = searchedDataLoadingResultLiveData,
             repository = repository,
             searchQuery = searchQuery

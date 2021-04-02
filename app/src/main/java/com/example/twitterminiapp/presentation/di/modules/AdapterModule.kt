@@ -1,6 +1,7 @@
 package com.example.twitterminiapp.presentation.di.modules
 
-import com.example.twitterminiapp.presentation.adapter.TwitterAdapter
+import com.example.twitterminiapp.presentation.adapter.SearchResultAdapter
+import com.example.twitterminiapp.presentation.adapter.HomeAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +14,13 @@ class AdapterModule {
 
     @Singleton
     @Provides
-    fun provideTwitterAdapter(): TwitterAdapter {
-        return TwitterAdapter()
+    fun provideHomeAdapter(): HomeAdapter {
+        return HomeAdapter()
+    }
+
+    @Singleton
+    @Provides
+    fun provideSearchResultAdapter(): SearchResultAdapter {
+        return SearchResultAdapter()
     }
 }

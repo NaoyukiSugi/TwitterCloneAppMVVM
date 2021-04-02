@@ -5,11 +5,9 @@ import androidx.paging.PageKeyedDataSource
 import com.example.twitterminiapp.data.model.GetSearchedTweetsResponse
 import com.example.twitterminiapp.data.model.Tweet
 import com.example.twitterminiapp.domain.repository.TwitterRepository
-import com.example.twitterminiapp.domain.usecase.GetSearchedTimelineUseCase
 import kotlinx.coroutines.*
 
 class GetSearchedTweetsDataSource(
-    private val getSearchedTimelineUseCase: GetSearchedTimelineUseCase,
     private val searchedDataLoadingResultLiveData: MutableLiveData<SearchedTweetsDataLoadingResult>,
     private val repository: TwitterRepository,
     private val searchQuery: String
@@ -58,18 +56,12 @@ class GetSearchedTweetsDataSource(
     }
 
     private suspend fun fetch(nextToken: String?): GetSearchedTweetsResponse? =
-        withContext(Dispatchers.IO) {
-            try {
-                getSearchedTimelineUseCase.execute(searchQuery = searchQuery, nextToken = nextToken)
-                repository.getSearchedTimeline(searchQuery = searchQuery, nextToken = nextToken)
-            } catch (error: Exception) {
-                withContext(Dispatchers.Main) {
-                    searchedDataLoadingResultLiveData.postValue(
-                        SearchedTweetsDataLoadingResult.Failed(
-                            error
-                        )
-                    )
-                }
+        try {
+            repository.getSearchedTimeline(searchQuery = searchQuery, nextToken = nextToken).data
+        } catch (error: Exception) {
+            withContext(Dispatchers.Main) {
+                searchedDataLoadingResultLiveData
+                    .postValue(SearchedTweetsDataLoadingResult.Failed(error))
             }
             null
         }

@@ -30,7 +30,7 @@ class TwitterViewModel(
 
     lateinit var searchedDataLoadingResultLiveData: LiveData<SearchedTweetsDataLoadingResult>
 
-    var searchQuery: String = ""
+    var searchQuery: String = "ポケモン"
 
     fun setUp(
         factory: GetSearchedTweetsDataSourceFactory
@@ -116,6 +116,6 @@ class TwitterViewModel(
 
     private companion object {
         const val NETWORK_ERROR = "Internet is not available"
-        const val GET_SEAECH_TWEETS_SIZE = 20
+        const val GET_SEAECH_TWEETS_SIZE = 10
     }
 }

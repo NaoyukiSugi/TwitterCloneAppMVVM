@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchResultFragment"
+            app:destination="@id/searchResultFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -25,7 +28,11 @@
     </fragment>
     <fragment
         android:id="@+id/searchResultFragment"
-        android:name="com.example.twitterminiapp.SearchResultFragment"
+        android:name="com.example.twitterminiapp.presentation.fragment.SearchResultFragment"
         android:label="fragment_search_result"
-        tools:layout="@layout/fragment_search_result" />
+        tools:layout="@layout/fragment_search_result">
+        <action
+            android:id="@+id/action_searchResultFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
 </navigation>

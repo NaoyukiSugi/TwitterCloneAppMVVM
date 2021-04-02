@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.twitterminiapp.data.model.Tweet
 import com.example.twitterminiapp.databinding.ViewTweetBinding
 
-class TwitterAdapter : PagedListAdapter<Tweet ,TwitterViewHolder>(DIFF_CALLBACK) {
+class HomeAdapter : RecyclerView.Adapter<TwitterViewHolder>() {
 
     private var onUserIconClickListener: ((Tweet) -> Unit)? = null
 
