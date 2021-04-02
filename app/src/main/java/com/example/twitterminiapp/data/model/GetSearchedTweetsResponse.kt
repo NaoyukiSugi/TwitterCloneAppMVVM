@@ -7,5 +7,7 @@ data class GetSearchedTweetsResponse(
     @SerializedName("data")
     val tweets: List<GetSearchedTweet>,
     @SerializedName("includes")
-    val includes: UserList
+    val includes: UserList,
+    @SerializedName("meta")
+    val meta: Meta
 ) : Serializable

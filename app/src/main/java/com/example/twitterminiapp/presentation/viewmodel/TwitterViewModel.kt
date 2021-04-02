@@ -5,74 +5,95 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
+import com.example.twitterminiapp.data.model.SearchQuery
 import com.example.twitterminiapp.data.model.Tweet
-import com.example.twitterminiapp.data.model.GetSearchedTweetsResponse
-import com.example.twitterminiapp.data.util.Resource
-import com.example.twitterminiapp.domain.usecase.GetSearchedTimelineUseCase
+import com.example.twitterminiapp.data.util.Result
+import com.example.twitterminiapp.domain.datasource.GetSearchedTweetsDataSourceFactory
+import com.example.twitterminiapp.domain.datasource.SearchedTweetsDataLoadingResult
 import com.example.twitterminiapp.domain.usecase.GetTimelineUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class TwitterViewModel(
-        private val app: Application,
-        private val getTimelineUseCase: GetTimelineUseCase,
-        private val getSearchedTimelineUseCase: GetSearchedTimelineUseCase
+    private val app: Application,
+    private val getTimelineUseCase: GetTimelineUseCase
 ) : AndroidViewModel(app) {
 
-    val tweets: MutableLiveData<Resource<List<Tweet>>> = MutableLiveData()
-    val searchedGetSearchedTweetsNew: MutableLiveData<Resource<List<Tweet>>> = MutableLiveData()
+    var homeTimelineTweetsLiveDataWithResult: MutableLiveData<Result<List<Tweet>>> =
+        MutableLiveData()
 
-    fun getTimeline() = viewModelScope.launch(Dispatchers.IO) {
-        tweets.postValue(Resource.Loading())
+    lateinit var searchedTweetsLiveData: LiveData<PagedList<Tweet>>
+
+    lateinit var searchedDataLoadingResultLiveData: LiveData<SearchedTweetsDataLoadingResult>
+
+    val searchQuery = SearchQuery("")
+
+    fun setUp(
+        factory: GetSearchedTweetsDataSourceFactory
+    ) {
+        searchedTweetsLiveData = createSearchedTweetsLiveData(factory, createPagedListConfig())
+        searchedDataLoadingResultLiveData = factory.getSearchedDataLoadingResultLiveData()
+    }
+
+    fun getHomeTimeline() = viewModelScope.launch(Dispatchers.IO) {
+        if (!isNetworkAvailable(app)) homeTimelineTweetsLiveDataWithResult.postValue(
+            Result.Error(NETWORK_ERROR)
+        )
         try {
-            if (isNetworkAvailable(app)) {
-                val apiResult = getTimelineUseCase.execute()
-                tweets.postValue(apiResult)
-            } else {
-                tweets.postValue(Resource.Error("Internet is not available"))
-            }
+            val result = getTimelineUseCase.execute()
+            homeTimelineTweetsLiveDataWithResult.postValue(result)
         } catch (e: Exception) {
-            tweets.postValue(Resource.Error(e.message.toString()))
+            homeTimelineTweetsLiveDataWithResult.postValue(Result.Error(message = e.message.toString()))
         }
     }
 
-    fun getSearchedTimeline(
-            searchQuery: String
-    ) = viewModelScope.launch(Dispatchers.IO) {
-        searchedGetSearchedTweetsNew.postValue(Resource.Loading())
-        try {
-            if (isNetworkAvailable(app)) {
-                val apiResult = getSearchedTimelineUseCase.execute(searchQuery)
-                searchedGetSearchedTweetsNew.postValue(convertToTweets(apiResult))
-            } else {
-                searchedGetSearchedTweetsNew.postValue(Resource.Error("Internet is not available"))
-            }
-        } catch (e: Exception) {
-            searchedGetSearchedTweetsNew.postValue(Resource.Error(e.message.toString()))
-        }
+    fun setHomeTimelineTweetsObserver(
+        lifecycleOwner: LifecycleOwner,
+        observer: Observer<Result<List<Tweet>>>
+    ) {
+        homeTimelineTweetsLiveDataWithResult.observe(lifecycleOwner, observer)
     }
 
-    private fun convertToTweets(resource: Resource<GetSearchedTweetsResponse>): Resource<List<Tweet>> {
-        val tweets = resource.data.let { response ->
-            val userIdMap = response!!.includes.users.associate { it.id to it }
-            response.tweets.map {
-                Tweet(id = it.id, createdAt = it.createdAt, text = it.text, user = userIdMap[it.authorId]!!)
-            }
-        }
-        return Resource.Success(tweets)
+    fun setSearchedTweetsObserver(
+        lifecycleOwner: LifecycleOwner,
+        observer: Observer<PagedList<Tweet>>
+    ) {
+        searchedTweetsLiveData.observe(lifecycleOwner, observer)
     }
+
+    fun setSearchedDataLoadingResultObserver(
+        lifecycleOwner: LifecycleOwner,
+        observer: Observer<SearchedTweetsDataLoadingResult>
+    ) {
+        searchedDataLoadingResultLiveData.observe(lifecycleOwner, observer)
+    }
+
+    fun invalidata() {
+        searchedTweetsLiveData.value?.dataSource?.invalidate()
+    }
+
+    private fun createSearchedTweetsLiveData(
+        factory: GetSearchedTweetsDataSourceFactory,
+        config: PagedList.Config
+    ) = LivePagedListBuilder(factory, config).build()
+
+    private fun createPagedListConfig() =
+        PagedList.Config.Builder()
+            .setPageSize(GET_SEAECH_TWEETS_SIZE)
+            .setEnablePlaceholders(true)
+            .build()
 
     private fun isNetworkAvailable(context: Context?): Boolean {
         if (context == null) return false
         val connectivityManager =
-                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val capabilities =
-                    connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
             if (capabilities != null) {
                 when {
                     capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
@@ -91,5 +112,10 @@ class TwitterViewModel(
             if (activeNetworkInfo != null && activeNetworkInfo.isConnected) true
         }
         return false
+    }
+
+    private companion object {
+        const val NETWORK_ERROR = "Internet is not available"
+        const val GET_SEAECH_TWEETS_SIZE = 10
     }
 }

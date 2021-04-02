@@ -2,13 +2,14 @@ package com.example.twitterminiapp.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.twitterminiapp.data.model.Tweet
 import com.example.twitterminiapp.databinding.ViewTweetBinding
 
-class TwitterAdapter : RecyclerView.Adapter<TwitterViewHolder>() {
+class HomeAdapter : RecyclerView.Adapter<TwitterViewHolder>() {
 
     private var onUserIconClickListener: ((Tweet) -> Unit)? = null
 
