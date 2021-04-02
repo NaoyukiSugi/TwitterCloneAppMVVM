@@ -56,7 +56,7 @@ class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener,
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         if (query != null) {
-            viewModel.searchQuery = query
+            viewModel.searchQuery.value = query
             if (findNavController().currentDestination?.id == R.id.homeFragment) {
                 findNavController().navigate(R.id.action_homeFragment_to_searchResultFragment)
             }

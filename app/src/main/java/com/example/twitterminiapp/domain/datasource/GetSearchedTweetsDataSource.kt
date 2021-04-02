@@ -3,6 +3,7 @@ package com.example.twitterminiapp.domain.datasource
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.example.twitterminiapp.data.model.GetSearchedTweetsResponse
+import com.example.twitterminiapp.data.model.SearchQuery
 import com.example.twitterminiapp.data.model.Tweet
 import com.example.twitterminiapp.domain.repository.TwitterRepository
 import kotlinx.coroutines.*
@@ -10,7 +11,7 @@ import kotlinx.coroutines.*
 class GetSearchedTweetsDataSource(
     private val searchedDataLoadingResultLiveData: MutableLiveData<SearchedTweetsDataLoadingResult>,
     private val repository: TwitterRepository,
-    private val searchQuery: String
+    private val searchQuery: SearchQuery
 ) : PageKeyedDataSource<String, Tweet>(), CoroutineScope by MainScope() {
     override fun loadInitial(
         params: LoadInitialParams<String>,

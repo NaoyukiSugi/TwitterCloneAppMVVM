@@ -8,9 +8,9 @@ import android.os.Build
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.example.twitterminiapp.data.model.SearchQuery
 import com.example.twitterminiapp.data.model.Tweet
 import com.example.twitterminiapp.data.util.Result
-import com.example.twitterminiapp.domain.datasource.GetSearchedTweetsDataSource
 import com.example.twitterminiapp.domain.datasource.GetSearchedTweetsDataSourceFactory
 import com.example.twitterminiapp.domain.datasource.SearchedTweetsDataLoadingResult
 import com.example.twitterminiapp.domain.usecase.GetTimelineUseCase
@@ -30,7 +30,7 @@ class TwitterViewModel(
 
     lateinit var searchedDataLoadingResultLiveData: LiveData<SearchedTweetsDataLoadingResult>
 
-    var searchQuery: String = "ポケモン"
+    val searchQuery = SearchQuery("")
 
     fun setUp(
         factory: GetSearchedTweetsDataSourceFactory

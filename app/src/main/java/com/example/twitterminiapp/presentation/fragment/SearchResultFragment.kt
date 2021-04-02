@@ -77,15 +77,16 @@ class SearchResultFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             })
 
             setSearchedDataLoadingResultObserver(viewLifecycleOwner, Observer { result ->
+                binding.swipeRefreshLayout.isRefreshing = false
                 when (result) {
                     SearchedTweetsDataLoadingResult.Found -> {
-
+                        // do nothing
                     }
                     is SearchedTweetsDataLoadingResult.Failed -> {
                         Toast.makeText(activity, result.error.message, Toast.LENGTH_LONG).show()
                     }
                     SearchedTweetsDataLoadingResult.NotFound -> {
-                        // TODO()
+                        Toast.makeText(activity, "Tweetが見つかりませんでした", Toast.LENGTH_LONG).show()
                     }
                 }
             })

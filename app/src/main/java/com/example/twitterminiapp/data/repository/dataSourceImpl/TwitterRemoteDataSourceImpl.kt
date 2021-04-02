@@ -4,6 +4,7 @@ import com.example.twitterminiapp.data.api.TwitterNewAPIService
 import com.example.twitterminiapp.data.api.TwitterOldAPIService
 import com.example.twitterminiapp.data.model.Tweet
 import com.example.twitterminiapp.data.model.GetSearchedTweetsResponse
+import com.example.twitterminiapp.data.model.SearchQuery
 import com.example.twitterminiapp.data.repository.dataSource.TwitterRemoteDataSource
 import retrofit2.Response
 
@@ -17,9 +18,9 @@ class TwitterRemoteDataSourceImpl(
     }
 
     override suspend fun getSearchedTimeline(
-        searchQuery: String,
+        searchQuery: SearchQuery,
         nextToken: String?
     ): Response<GetSearchedTweetsResponse> {
-        return newApiService.getSearchedTimeline(searchQuery, nextToken = nextToken)
+        return newApiService.getSearchedTimeline(searchQuery.value, nextToken = nextToken)
     }
 }

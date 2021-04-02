@@ -2,6 +2,7 @@ package com.example.twitterminiapp.data.repository
 
 import com.example.twitterminiapp.data.model.Tweet
 import com.example.twitterminiapp.data.model.GetSearchedTweetsResponse
+import com.example.twitterminiapp.data.model.SearchQuery
 import com.example.twitterminiapp.data.repository.dataSource.TwitterRemoteDataSource
 import com.example.twitterminiapp.data.util.Result
 import com.example.twitterminiapp.domain.repository.TwitterRepository
@@ -16,7 +17,7 @@ class TwitterRepositoryImpl(
     }
 
     override suspend fun getSearchedTimeline(
-        searchQuery: String,
+        searchQuery: SearchQuery,
         nextToken: String?
     ): Result<GetSearchedTweetsResponse> {
         return responseToResourceForNewApi(remoteDataSource.getSearchedTimeline(searchQuery, nextToken))
