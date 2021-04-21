@@ -95,7 +95,7 @@ class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener,
             setHomeTimelineTweetsObserver(viewLifecycleOwner, Observer { result ->
                 when (result) {
                     is Result.Success -> {
-                        homeAdapter.differ.submitList(result.data)
+                        homeAdapter.submitList(result.data)
                     }
                     is Result.Error -> {
                         Toast.makeText(activity, result.message, Toast.LENGTH_LONG).show()
