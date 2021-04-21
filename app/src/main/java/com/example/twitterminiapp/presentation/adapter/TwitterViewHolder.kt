@@ -24,9 +24,4 @@ class TwitterViewHolder(
             }
         }
     }
-
-    @VisibleForTesting
-    internal fun getBinding() {
-
-    }
 }
