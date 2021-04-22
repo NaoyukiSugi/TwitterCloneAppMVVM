@@ -16,39 +16,63 @@ import org.mockito.kotlin.*
 
 internal class TwitterViewHolderTest {
 
-    lateinit var viewHolder: TwitterViewHolder
+    private lateinit var viewHolder: TwitterViewHolder
     private val requestManager: RequestManager = mock()
-    private val listener: (Tweet) -> Unit = mock()
+    private val listener: ((Tweet) -> Unit) = mock()
 
-    private val userIconMock: ImageView = mock()
-    private val userNameMock: TextView = mock()
-    private val userScreenNameMock: TextView = mock()
-    private val userDescriptionMock: TextView = mock()
+    private val homeUserIconMock: ImageView = mock()
+    private val homeUserNameMock: TextView = mock()
+    private val homeUserScreenNameMock: TextView = mock()
+    private val homeUserDescriptionMock: TextView = mock()
 
-//    private val rootView: ConstraintLayout = mock {
-//        on { findViewById<ImageView>(R.id.user_icon) } doReturn userIcon
-//        on { findViewById<TextView>(R.id.user_name) } doReturn userName
-//        on { findViewById<TextView>(R.id.user_screen_name) } doReturn userScreenName
-//        on { findViewById<TextView>(R.id.user_description) } doReturn userDescription
+    private val viewTweetBinding: ViewTweetBinding = mock {
+        on { root } doReturn mock()
+        on { homeUserIcon } doReturn homeUserIconMock
+        on { homeUserName } doReturn homeUserNameMock
+        on { homeUserScreenName } doReturn homeUserScreenNameMock
+        on { homeUserDescription } doReturn homeUserDescriptionMock
+    }
+
+//    val rootView: ConstraintLayout = mock {
+//        on { findViewById<ImageView>(R.id.home_user_icon) } doReturn userIconMock
+//        on { findViewById<TextView>(R.id.home_user_name) } doReturn userNameMock
+//        on { findViewById<TextView>(R.id.home_user_screen_name) } doReturn userScreenNameMock
+//        on { findViewById<TextView>(R.id.home_user_description) } doReturn userDescriptionMock
 //    }
 
-    private val viewTweetBinding: ViewTweetBinding = mock()
+    private val tweet: Tweet = Tweet(
+        id = 1,
+        createdAt = "createdAt",
+        text = "text",
+        user = User(
+            id = 1L,
+            name = "name",
+            screenName = "screenName",
+            description = "description",
+            profileImageUrlHttps = "profileImageUrlHttps"
+        )
+    )
 
     @BeforeEach
     fun setUp() {
-        viewTweetBinding.apply {
-            doReturn(userIconMock).whenever(userIcon)
-            doReturn(userNameMock).whenever(userName)
-            doReturn(userScreenNameMock).whenever(userScreenName)
-            doReturn(userDescriptionMock).whenever(userDescription)
-        }
+//        doReturn(viewTweetBinding).whenever(viewTweetBinding).apply(any())
+//        doReturn(rootView).whenever(viewTweetBinding).root
+//        doReturn(userNameMock).whenever(viewTweetBinding).homeUserName
+        viewTweetBinding.homeUserName
+
+//        viewTweetBinding.apply {
+//            doReturn(userIconMock).whenever(userIcon)
+//            doReturn(userNameMock).whenever(userName)
+//            doReturn(userScreenNameMock).whenever(userScreenName)
+//            doReturn(userDescriptionMock).whenever(userDescription)
+//        }
 
         viewHolder = spy(TwitterViewHolder(viewTweetBinding, requestManager, listener))
     }
 
     @Test
     fun `bind should load image into userIcon`() {
-//        viewHolder.bind(tweet)
+        viewHolder.bind(tweet)
 
 //        verify(requestManager).load(tweet.user.profileImageUrlHttps).into(viewTweetBinding.userIcon)
     }

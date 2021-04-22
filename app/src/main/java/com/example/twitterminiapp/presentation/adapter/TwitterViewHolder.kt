@@ -14,14 +14,12 @@ class TwitterViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(tweet: Tweet) {
-//        binding.apply {
-//            requestManager.load(tweet.user.profileImageUrlHttps).into(userIcon)
-//            userName.text = tweet.user.name
-//            userScreenName.text = tweet.user.screenName
-//            userDescription.text = tweet.text
-//            userIcon.setOnClickListener {
-//                onUserIconClickListener?.let { it(tweet) }
-//            }
-//        }
+        requestManager.load(tweet.user.profileImageUrlHttps).into(binding.homeUserIcon)
+        binding.homeUserName.text = tweet.user.name
+        binding.homeUserScreenName.text = tweet.user.screenName
+        binding.homeUserDescription.text = tweet.text
+        binding.homeUserIcon.setOnClickListener {
+            onUserIconClickListener?.let { it(tweet) }
+        }
     }
 }
