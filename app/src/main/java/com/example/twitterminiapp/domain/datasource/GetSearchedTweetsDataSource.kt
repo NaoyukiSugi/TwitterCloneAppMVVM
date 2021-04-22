@@ -22,7 +22,7 @@ class GetSearchedTweetsDataSource(
 
         launch {
             val response = fetch(null) ?: return@launch
-            if (response.tweets == null) {
+            if (response.tweets.isEmpty()) {
                 searchedDataLoadingResultLiveData.postValue(SearchedTweetsDataLoadingResult.NotFound)
                 return@launch
             }
@@ -45,9 +45,8 @@ class GetSearchedTweetsDataSource(
         callback: LoadCallback<String, Tweet>
     ) {
         launch {
-            if (params.key == null) return@launch
-            val response = fetch(null) ?: return@launch
-            if (response.tweets == null) {
+            val response = fetch(params.key) ?: return@launch
+            if (response.tweets.isEmpty()) {
                 searchedDataLoadingResultLiveData.postValue(SearchedTweetsDataLoadingResult.NotFound)
                 return@launch
             }
