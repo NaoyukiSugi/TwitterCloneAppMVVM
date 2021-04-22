@@ -1,5 +1,6 @@
 package com.example.twitterminiapp.domain.datasource
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.example.twitterminiapp.data.model.GetSearchedTweetsResponse
@@ -13,6 +14,7 @@ class GetSearchedTweetsDataSource(
     private val repository: TwitterRepository,
     private val searchQuery: SearchQuery
 ) : PageKeyedDataSource<String, Tweet>(), CoroutineScope by MainScope() {
+
     override fun loadInitial(
         params: LoadInitialParams<String>,
         callback: LoadInitialCallback<String, Tweet>
@@ -56,7 +58,8 @@ class GetSearchedTweetsDataSource(
         }
     }
 
-    private suspend fun fetch(nextToken: String?): GetSearchedTweetsResponse? =
+    @VisibleForTesting
+    internal suspend fun fetch(nextToken: String?): GetSearchedTweetsResponse? =
         try {
             repository.getSearchedTimeline(searchQuery = searchQuery, nextToken = nextToken).data
         } catch (error: Exception) {
@@ -67,7 +70,8 @@ class GetSearchedTweetsDataSource(
             null
         }
 
-    private fun convertToTweets(searchedTweetsResponse: GetSearchedTweetsResponse): List<Tweet> {
+    @VisibleForTesting
+    internal fun convertToTweets(searchedTweetsResponse: GetSearchedTweetsResponse): List<Tweet> {
         val tweets = searchedTweetsResponse.let { response ->
             val userIdMap = response.includes.users.associateBy { it.id }
             response.tweets.map {
