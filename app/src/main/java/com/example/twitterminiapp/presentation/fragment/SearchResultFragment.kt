@@ -42,11 +42,11 @@ class SearchResultFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setObserver()
-        viewModel.invalidata()
+        viewModel.invalidate()
     }
 
     override fun onRefresh() {
-        viewModel.invalidata()
+        viewModel.invalidate()
     }
 
     private fun initAdapter() {
