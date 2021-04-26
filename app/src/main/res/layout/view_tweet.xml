@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="tweet"
+            type="com.example.twitterminiapp.data.model.Tweet" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -10,6 +17,7 @@
 
         <ImageView
             android:id="@+id/home_user_icon"
+            imageUrl="@{tweet.user.profileImageUrlHttps}"
             android:layout_width="@dimen/tweet_icon_size"
             android:layout_height="@dimen/tweet_icon_size"
             android:layout_marginStart="@dimen/tweet_icon_margin"
@@ -26,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/tweet_icon_margin"
             android:gravity="center_horizontal"
+            android:text="@{tweet.user.name}"
             android:textColor="@color/tweet_user_name"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/home_user_icon"
@@ -36,6 +45,7 @@
             android:id="@+id/home_user_screen_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{tweet.user.screenName}"
             android:textColor="@color/tweet_user_screen_name"
             app:layout_constraintStart_toEndOf="@id/home_user_name"
             app:layout_constraintTop_toTopOf="parent"
@@ -45,6 +55,7 @@
             android:id="@+id/home_user_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@{tweet.text}"
             android:textColor="@color/tweet_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

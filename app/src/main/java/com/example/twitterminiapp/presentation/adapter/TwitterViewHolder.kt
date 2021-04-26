@@ -8,16 +8,13 @@ import com.example.twitterminiapp.data.model.Tweet
 import com.example.twitterminiapp.databinding.ViewTweetBinding
 
 class TwitterViewHolder(
-    private val binding: ViewTweetBinding,
+    val binding: ViewTweetBinding,
     private val requestManager: RequestManager = Glide.with(binding.root),
     private val onUserIconClickListener: ((Tweet) -> Unit)?
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(tweet: Tweet) {
-        requestManager.load(tweet.user.profileImageUrlHttps).into(binding.homeUserIcon)
-        binding.homeUserName.text = tweet.user.name
-        binding.homeUserScreenName.text = tweet.user.screenName
-        binding.homeUserDescription.text = tweet.text
+        binding.tweet = tweet
         binding.homeUserIcon.setOnClickListener {
             onUserIconClickListener?.let { it(tweet) }
         }

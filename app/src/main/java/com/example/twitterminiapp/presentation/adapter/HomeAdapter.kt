@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.example.twitterminiapp.data.model.Tweet
 import com.example.twitterminiapp.databinding.ViewTweetBinding
 
