@@ -13,7 +13,11 @@ import com.example.twitterminiapp.domain.datasource.GetSearchedTweetsDataSource
 import com.example.twitterminiapp.domain.datasource.GetSearchedTweetsDataSourceFactory
 import com.example.twitterminiapp.domain.datasource.SearchedTweetsDataLoadingResult
 import com.example.twitterminiapp.domain.usecase.GetTimelineUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,6 +39,7 @@ internal class TwitterViewModelTest {
 
     @BeforeEach
     fun setUp() {
+        Dispatchers.setMain(TestCoroutineDispatcher())
         viewModel = spy(TwitterViewModel(app, getTimelineUseCase, liveDataWithResult))
         doReturn(config).whenever(viewModel).createPagedListConfig()
         doReturn(searchedTweetsliveData).whenever(viewModel).createSearchedTweetsLiveData(factory, config)
@@ -42,7 +47,7 @@ internal class TwitterViewModelTest {
     }
 
     @AfterEach
-    internal fun tearDown() {
+    fun tearDown() {
         reset(
                 app,
                 getTimelineUseCase,
@@ -50,8 +55,9 @@ internal class TwitterViewModelTest {
                 factory,
                 config,
                 searchedTweetsliveData,
-                resultLiveData,
+                resultLiveData
         )
+        Dispatchers.resetMain()
     }
 
     @Test
@@ -73,7 +79,7 @@ internal class TwitterViewModelTest {
 
         viewModel.getHomeTimeline()
 
-        verify(viewModel.homeTimelineTweetsLiveDataWithResult).postValue(errorResult)
+        verify(liveDataWithResult).postValue(errorResult)
     }
 
     @Test
@@ -91,7 +97,7 @@ internal class TwitterViewModelTest {
     }
 
     @Test
-    fun `getHomeTimeline should post caught error Result when network is available and error is thrown`() {
+    fun `getHomeTimeline should post caught error Result when network is available and some error is thrown`() {
         runBlockingTest {
             val exception = RuntimeException()
             val errorResult: Result.Error<List<Tweet>> = mock()
@@ -121,35 +127,32 @@ internal class TwitterViewModelTest {
     fun `setSearchedTweetsObserver should observe`() {
         val lifecycleOwner: LifecycleOwner = mock()
         val observer: Observer<PagedList<Tweet>> = mock()
-        val searchedTweetsLiveData: LiveData<PagedList<Tweet>> = mock()
         viewModel.setUp(factory)
 
         viewModel.setSearchedTweetsObserver(lifecycleOwner, observer)
 
-        verify(searchedTweetsLiveData).observe(lifecycleOwner, observer)
+        verify(searchedTweetsliveData).observe(lifecycleOwner, observer)
     }
 
     @Test
     fun `setSearchedDataLoadingResultObserver should observe`() {
         val lifecycleOwner: LifecycleOwner = mock()
         val observer: Observer<SearchedTweetsDataLoadingResult> = mock()
-        val searchedDataLoadingResultLiveData: LiveData<SearchedTweetsDataLoadingResult> = mock()
         viewModel.setUp(factory)
 
         viewModel.setSearchedDataLoadingResultObserver(lifecycleOwner, observer)
 
-        verify(searchedDataLoadingResultLiveData).observe(lifecycleOwner, observer)
+        verify(resultLiveData).observe(lifecycleOwner, observer)
     }
 
     @Test
     fun `invalidate should invalidate`() {
         val dataSource: GetSearchedTweetsDataSource = mock()
-        val searchedTweetsLiveData: LiveData<PagedList<Tweet>> = mock()
         val pagedList: PagedList<Tweet> = mock()
-        doReturn(pagedList).whenever(searchedTweetsLiveData.value)
-        doReturn(dataSource).whenever(pagedList.dataSource)
+        doReturn(pagedList).whenever(searchedTweetsliveData).value
+        doReturn(dataSource).whenever(pagedList).dataSource
+        viewModel.setUp(factory)
 
-        viewModel.searchedTweetsLiveData = searchedTweetsLiveData
         viewModel.invalidate()
 
         verify(dataSource).invalidate()
@@ -157,6 +160,5 @@ internal class TwitterViewModelTest {
 
     private companion object {
         const val NETWORK_ERROR = "Internet is not available"
-        const val GET_SEAECH_TWEETS_SIZE = 10
     }
 }

@@ -48,7 +48,10 @@ class TwitterViewModel(
     }
 
     fun getHomeTimeline() = viewModelScope.launch(Dispatchers.IO) {
-        if (!isNetworkAvailable(app)) homeTimelineTweetsLiveDataWithResult.postValue(createErrorResult(NETWORK_ERROR))
+        if (!isNetworkAvailable(app)) {
+            homeTimelineTweetsLiveDataWithResult.postValue(createErrorResult(NETWORK_ERROR))
+            return@launch
+        }
         try {
             val result = getTimelineUseCase.execute()
             homeTimelineTweetsLiveDataWithResult.postValue(result)
