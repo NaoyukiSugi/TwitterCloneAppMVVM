@@ -12,44 +12,44 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.test.assertEquals
 
-class TwitterNewAPIServiceTest {
+class TwitterOldAPIServiceTest {
 
-    private lateinit var apiService: TwitterNewAPIService
+    private lateinit var aplService: TwitterOldAPIService
     private lateinit var server: MockWebServer
 
     @BeforeEach
     fun setUp() {
         server = MockWebServer()
-        apiService = Retrofit.Builder()
+        aplService = Retrofit.Builder()
             .baseUrl(server.url(""))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(TwitterNewAPIService::class.java)
+            .create(TwitterOldAPIService::class.java)
     }
 
     @AfterEach
-    internal fun tearDown() {
+    fun tearDown() {
         server.shutdown()
     }
 
     @Test
-    fun `getSearchedTimeline should return Response of GetSearchedTweetsResponse`() {
+    fun `getTimeline should return Response of Tweet list`() {
         runBlocking {
-            enqueueMockResponse("searched_tweet.json")
-            val responseBody = apiService.getSearchedTimeline(searchQuery = "コロナ").body()
-            val topTweet = responseBody!!.tweets[0]
-            assertEquals(1386610429254766595, topTweet.id)
-            assertEquals("2021-04-26T09:17:42.000Z", topTweet.createdAt)
+            enqueueMockResponse("timeline_response.json")
+            val responseBody = aplService.getTimeline().body()
+
+            val topTweet = responseBody!![0]
+
+            assertEquals(1374278834393026561, topTweet.id)
+            assertEquals("Tue Mar 23 08:36:21 +0000 2021", topTweet.createdAt)
             assertEquals(
-                "RT @kyototower_1228: 【臨時休業のお知らせ】\n新型コロナウィルス感染拡大防止のため、京都タワー展望室および“ゴジラvs京都”コラボイベントは、2021年4月26日(月)〜当面の間、臨時休業をいたします。",
+                "本日のヒカキンTVはこちら！→【1枚110万円のマスクを購入しました。】 https://t.co/ClW7a48ldI @YouTubeより https://t.co/2ytlnxVxAT",
                 topTweet.text
             )
         }
     }
 
-    private fun enqueueMockResponse(
-        fileName: String
-    ) {
+    private fun enqueueMockResponse(fileName: String) {
         val inputStream = javaClass.classLoader!!.getResourceAsStream(fileName)
         val source = inputStream.source().buffer()
         val mockResponse = MockResponse()
