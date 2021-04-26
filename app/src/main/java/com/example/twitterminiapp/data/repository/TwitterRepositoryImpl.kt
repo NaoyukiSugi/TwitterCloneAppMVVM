@@ -1,5 +1,6 @@
 package com.example.twitterminiapp.data.repository
 
+import androidx.annotation.VisibleForTesting
 import com.example.twitterminiapp.data.model.Tweet
 import com.example.twitterminiapp.data.model.GetSearchedTweetsResponse
 import com.example.twitterminiapp.data.model.SearchQuery
@@ -20,10 +21,16 @@ class TwitterRepositoryImpl(
         searchQuery: SearchQuery,
         nextToken: String?
     ): Result<GetSearchedTweetsResponse> {
-        return responseToResourceForNewApi(remoteDataSource.getSearchedTimeline(searchQuery, nextToken))
+        return responseToResourceForNewApi(
+            remoteDataSource.getSearchedTimeline(
+                searchQuery,
+                nextToken
+            )
+        )
     }
 
-    private fun responseToResourceForOldApi(response: Response<List<Tweet>>): Result<List<Tweet>> {
+    @VisibleForTesting
+    internal fun responseToResourceForOldApi(response: Response<List<Tweet>>): Result<List<Tweet>> {
         if (response.isSuccessful) {
             response.body()?.let { result ->
                 return Result.Success(result)
@@ -32,7 +39,8 @@ class TwitterRepositoryImpl(
         return Result.Error(response.message())
     }
 
-    private fun responseToResourceForNewApi(responseNewGetSearched: Response<GetSearchedTweetsResponse>): Result<GetSearchedTweetsResponse> {
+    @VisibleForTesting
+    internal fun responseToResourceForNewApi(responseNewGetSearched: Response<GetSearchedTweetsResponse>): Result<GetSearchedTweetsResponse> {
         if (responseNewGetSearched.isSuccessful) {
             responseNewGetSearched.body()?.let { result ->
                 return Result.Success(result)
