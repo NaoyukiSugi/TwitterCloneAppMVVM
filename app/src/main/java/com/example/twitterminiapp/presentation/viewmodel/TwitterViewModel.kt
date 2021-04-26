@@ -5,10 +5,13 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.widget.ImageView
 import androidx.annotation.VisibleForTesting
+import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.bumptech.glide.Glide
 import com.example.twitterminiapp.data.model.SearchQuery
 import com.example.twitterminiapp.data.model.Tweet
 import com.example.twitterminiapp.data.util.Result
@@ -20,18 +23,18 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class TwitterViewModel(
-        private val app: Application,
-        private val getTimelineUseCase: GetTimelineUseCase,
-        @VisibleForTesting val homeTimelineTweetsLiveDataWithResult: MutableLiveData<Result<List<Tweet>>>
+    private val app: Application,
+    private val getTimelineUseCase: GetTimelineUseCase,
+    @VisibleForTesting val homeTimelineTweetsLiveDataWithResult: MutableLiveData<Result<List<Tweet>>>
 ) : AndroidViewModel(app) {
 
     constructor(
-            app: Application,
-            getTimelineUseCase: GetTimelineUseCase,
+        app: Application,
+        getTimelineUseCase: GetTimelineUseCase,
     ) : this(
-            app = app,
-            getTimelineUseCase = getTimelineUseCase,
-            homeTimelineTweetsLiveDataWithResult = MutableLiveData()
+        app = app,
+        getTimelineUseCase = getTimelineUseCase,
+        homeTimelineTweetsLiveDataWithResult = MutableLiveData()
     )
 
     lateinit var searchedTweetsLiveData: LiveData<PagedList<Tweet>>
@@ -41,7 +44,7 @@ class TwitterViewModel(
     val searchQuery = SearchQuery("")
 
     fun setUp(
-            factory: GetSearchedTweetsDataSourceFactory
+        factory: GetSearchedTweetsDataSourceFactory
     ) {
         searchedTweetsLiveData = createSearchedTweetsLiveData(factory, createPagedListConfig())
         searchedDataLoadingResultLiveData = factory.getSearchedDataLoadingResultLiveData()
@@ -61,22 +64,22 @@ class TwitterViewModel(
     }
 
     fun setHomeTimelineTweetsObserver(
-            lifecycleOwner: LifecycleOwner,
-            observer: Observer<Result<List<Tweet>>>
+        lifecycleOwner: LifecycleOwner,
+        observer: Observer<Result<List<Tweet>>>
     ) {
         homeTimelineTweetsLiveDataWithResult.observe(lifecycleOwner, observer)
     }
 
     fun setSearchedTweetsObserver(
-            lifecycleOwner: LifecycleOwner,
-            observer: Observer<PagedList<Tweet>>
+        lifecycleOwner: LifecycleOwner,
+        observer: Observer<PagedList<Tweet>>
     ) {
         searchedTweetsLiveData.observe(lifecycleOwner, observer)
     }
 
     fun setSearchedDataLoadingResultObserver(
-            lifecycleOwner: LifecycleOwner,
-            observer: Observer<SearchedTweetsDataLoadingResult>
+        lifecycleOwner: LifecycleOwner,
+        observer: Observer<SearchedTweetsDataLoadingResult>
     ) {
         searchedDataLoadingResultLiveData.observe(lifecycleOwner, observer)
     }
@@ -87,25 +90,25 @@ class TwitterViewModel(
 
     @VisibleForTesting
     internal fun createSearchedTweetsLiveData(
-            factory: GetSearchedTweetsDataSourceFactory,
-            config: PagedList.Config
+        factory: GetSearchedTweetsDataSourceFactory,
+        config: PagedList.Config
     ) = LivePagedListBuilder(factory, config).build()
 
     @VisibleForTesting
     internal fun createPagedListConfig() =
-            PagedList.Config.Builder()
-                    .setPageSize(GET_SEAECH_TWEETS_SIZE)
-                    .setEnablePlaceholders(true)
-                    .build()
+        PagedList.Config.Builder()
+            .setPageSize(GET_SEAECH_TWEETS_SIZE)
+            .setEnablePlaceholders(true)
+            .build()
 
     @VisibleForTesting
     internal fun isNetworkAvailable(context: Context?): Boolean {
         if (context == null) return false
         val connectivityManager =
-                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val capabilities =
-                    connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
             if (capabilities != null) {
                 when {
                     capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
@@ -129,8 +132,18 @@ class TwitterViewModel(
     @VisibleForTesting
     internal fun createErrorResult(message: String) = Result.Error<List<Tweet>>(message)
 
-    private companion object {
-        const val NETWORK_ERROR = "Internet is not available"
-        const val GET_SEAECH_TWEETS_SIZE = 10
+    companion object {
+        private const val NETWORK_ERROR = "Internet is not available"
+        private const val GET_SEAECH_TWEETS_SIZE = 10
+
+        @JvmStatic
+        @BindingAdapter("imageUrl")
+        fun loadImage(view: ImageView, imageUrl: String?) {
+            if (imageUrl != null) {
+                Glide.with(view.context)
+                    .load(imageUrl)
+                    .into(view)
+            }
+        }
     }
 }

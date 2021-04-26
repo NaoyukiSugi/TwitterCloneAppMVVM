@@ -28,10 +28,10 @@ class ProfileFragment : Fragment() {
         val args: ProfileFragmentArgs by navArgs()
         val user = args.selectedUserIcon
         viewBinding.apply {
-            Glide.with(viewBinding.root).load(user.profileImageUrlHttps).into(userIcon)
-            userName.text = user.name
-            userScreenName.text = user.screenName
-            userDescription.text = user.description
+            Glide.with(viewBinding.root).load(user.profileImageUrlHttps).into(profileUserIcon)
+            profileUserName.text = user.name
+            profileUserScreenName.text = user.screenName
+            profileUserDescription.text = user.description
         }
     }
 }
